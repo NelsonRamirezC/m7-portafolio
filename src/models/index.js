@@ -49,7 +49,7 @@ DetalleVenta.belongsTo(Producto, {
 });
 
 // Cliente - Carrito: 1 a muchos
-Cliente.hasOne(Carrito, {
+Cliente.hasMany(Carrito, {
   foreignKey: 'clienteId',
   as: 'carrito'
 });

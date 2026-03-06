@@ -17,7 +17,7 @@ module.exports = (sequelize) => {
       hora: {
         type: DataTypes.TIME,
         allowNull: false,
-        defaultValue: DataTypes.NOW
+        defaultValue: sequelize.literal('CURRENT_TIME') 
       },
       clienteId: {
         type: DataTypes.INTEGER,
