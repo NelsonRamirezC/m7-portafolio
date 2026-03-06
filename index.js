@@ -1,6 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
+const morgan = require('morgan');
+
 const { create } = require('express-handlebars');
 const { sequelize } = require('./src/models/index.js');
 const clientesRoutes = require('./src/routes/clientesRoutes');
@@ -26,6 +28,7 @@ app.set("views", path.resolve(__dirname, "./src/views"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../public')));
+app.use(morgan('dev'));
 
 // Rutas
 app.use('/api/clientes', clientesRoutes);
@@ -44,7 +47,7 @@ const PORT = process.env.PORT || 3000;
 async function iniciar() {
   try {
     // Sincronizar modelos con la base de datos
-    await sequelize.sync({ force: true, alter: true, });
+    await sequelize.sync({ force: false, alter: true, });
     console.log('✓ Base de datos sincronizada correctamente');
 
     app.listen(PORT, () => {

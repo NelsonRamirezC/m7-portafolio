@@ -1,9 +1,12 @@
+const {Venta} = require("../models/index.js");
+
 // Controlador de Ventas
 class VentaController {
   async listar(req, res) {
     try {
       // TODO: Implementar lógica
-      res.json({ mensaje: 'Listar ventas' });
+      let ventas = await Venta.findAll();
+      res.json({ ventas, mensaje: 'ok' });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

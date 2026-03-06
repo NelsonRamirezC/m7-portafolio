@@ -1,9 +1,13 @@
+const {Cliente} = require("../models/index.js");
+
 // Controlador de Clientes
 class ClienteController {
   async listar(req, res) {
     try {
       // TODO: Implementar lógica
-      res.json({ mensaje: 'Listar clientes' });
+        let clientes = await Cliente.findAll();
+
+      res.json({ clientes, mensaje: 'ok' });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -12,7 +16,12 @@ class ClienteController {
   async obtener(req, res) {
     try {
       // TODO: Implementar lógica
-      res.json({ mensaje: 'Obtener cliente' });
+      let { id } = req.params;
+      let cliente = await Cliente.findByPk(id);
+
+      if(!cliente) return res.status(404).json({mensaje: "Cliente no existe..." })
+
+      res.json({ cliente, mensaje: 'ok' });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

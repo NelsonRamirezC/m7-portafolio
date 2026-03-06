@@ -1,9 +1,14 @@
+const { RAW } = require("sequelize/lib/query-types");
+const {Producto} = require("../models/index.js");
+
 // Controlador de Productos
 class ProductoController {
   async listar(req, res) {
     try {
       // TODO: Implementar lógica
-      res.json({ mensaje: 'Listar productos' });
+      let productos = await Producto.findAll();
+      res.json({ productos, mensaje: 'ok' });
+
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -12,7 +17,15 @@ class ProductoController {
   async obtener(req, res) {
     try {
       // TODO: Implementar lógica
-      res.json({ mensaje: 'Obtener producto' });
+
+      let { id } = req.params;
+
+        const producto = await Producto.findByPk(id);
+
+        if(!producto) return res.status(404).json({mensaje: "Producto no encontrado."});
+
+
+      res.json({ producto, mensaje: 'ok' });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -20,8 +33,11 @@ class ProductoController {
 
   async crear(req, res) {
     try {
-      // TODO: Implementar lógica
-      res.json({ mensaje: 'Crear producto' });
+        let { nombre, descripcion, precio, descuento, stock } = req.body;
+
+        let producto = await Producto.create({ nombre, descripcion, precio, descuento, stock });
+
+      res.status(201).json({ producto, mensaje: 'producto creado con éxito.' });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -30,7 +46,19 @@ class ProductoController {
   async actualizar(req, res) {
     try {
       // TODO: Implementar lógica
-      res.json({ mensaje: 'Actualizar producto' });
+
+        let { id } = req.params;
+
+        const producto = await Producto.findByPk(id);
+
+        if(!producto) return res.status(404).json({mensaje: "Producto no encontrado."});
+
+        let { nombre, descripcion, precio, descuento, stock } = req.body;
+        
+        await producto.update({nombre, descripcion, precio, descuento, stock });
+
+      res.json({ producto, mensaje: 'producto actualizado.' });
+
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
