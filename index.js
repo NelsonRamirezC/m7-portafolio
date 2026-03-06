@@ -1,17 +1,26 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
-const { sequelize } = require('./models');
-const clientesRoutes = require('./routes/clientesRoutes');
-const productosRoutes = require('./routes/productosRoutes');
-const ventasRoutes = require('./routes/ventasRoutes');
-const carritoRoutes = require('./routes/carritoRoutes');
+const { create } = require('express-handlebars');
+const { sequelize } = require('./src/models/index.js');
+const clientesRoutes = require('./src/routes/clientesRoutes');
+const productosRoutes = require('./src/routes/productosRoutes');
+const ventasRoutes = require('./src/routes/ventasRoutes');
+const carritoRoutes = require('./src/routes/carritoRoutes');
 
 const app = express();
 
 // Configurar motor de vistas (Handlebars)
-app.set('view engine', 'hbs');
-app.set('views', path.join(__dirname, 'views'));
+const hbs = create({
+	partialsDir: [
+		"views/partials/",
+	],
+});
+
+// Register `hbs` as our view engine using its bound `engine()` function.
+app.engine("handlebars", hbs.engine);
+app.set("view engine", "handlebars");
+app.set("views", path.resolve(__dirname, "./src/views"));
 
 // Middleware
 app.use(express.json());
@@ -26,7 +35,7 @@ app.use('/api/carrito', carritoRoutes);
 
 // Ruta principal
 app.get('/', (req, res) => {
-  res.render('index', { titulo: 'Tienda Online' });
+  res.render('home', { titulo: 'Tienda Online' });
 });
 
 // Sincronizar base de datos y iniciar servidor
